@@ -24,6 +24,7 @@ import PersonAddIcon from '@material-ui/icons/PersonAdd';
 import ConfirmationDialog from './ConfirmationDialog';
 import AddNewUserDialog from './AddNewUserDialog';
 import { deleteUser, changeUserRole } from '../Axios';
+import { useTranslation } from 'react-i18next';
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -59,7 +60,7 @@ const headCells = [
 ];
 
 function EnhancedTableHead(props) {
-  const { classes, order, orderBy, onRequestSort } = props;
+  const { classes, order, orderBy, onRequestSort, t } = props;
   const createSortHandler = (property) => (event) => {
     onRequestSort(event, property);
   };
@@ -78,7 +79,7 @@ function EnhancedTableHead(props) {
               active={orderBy === headCell.id}
               direction={orderBy === headCell.id ? order : 'asc'}
               onClick={createSortHandler(headCell.id)}>
-              {headCell.label}
+              {t([headCell.label, 'Roles:' + headCell.label])}
               {orderBy === headCell.id ? (
                 <span className={classes.visuallyHidden}>
                   {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
@@ -121,16 +122,16 @@ const useToolbarStyles = makeStyles((theme) => ({
   },
 }));
 
-const EnhancedTableToolbar = ({ roles, updateUsers }) => {
+const EnhancedTableToolbar = ({ roles, updateUsers, t }) => {
   const classes = useToolbarStyles();
   const [openNewUser, setOpenNewUser] = React.useState(false);
 
   return (
     <Toolbar className={classes.root}>
-      <h2 className="users-table__title">List of users</h2>
+      <h2 className="users-table__title">{t('List of users')}</h2>
 
       <>
-        <Tooltip title="Add new user">
+        <Tooltip title={t('Add new user')}>
           <IconButton
             className="new_user-btn"
             aria-label="add new user"
@@ -183,6 +184,8 @@ export default function EnhancedTable({ data, roles, updateUsers }) {
   const [open, setOpen] = React.useState(false);
   const [deletableUser, setDeletableUser] = React.useState(null);
 
+  const { t } = useTranslation(['Admin\\UsersTable', 'Roles']);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';
     setOrder(isAsc ? 'desc' : 'asc');
@@ -211,7 +214,8 @@ export default function EnhancedTable({ data, roles, updateUsers }) {
     }
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+  const emptyRows =
+    rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
 
   const handleDelete = async (id) => {
     await deleteUser(id).then(() => setOpen(false));
@@ -236,7 +240,7 @@ export default function EnhancedTable({ data, roles, updateUsers }) {
 
   return (
     <div className={classes.root}>
-      <EnhancedTableToolbar roles={roles} updateUsers={updateUsers} />
+      <EnhancedTableToolbar roles={roles} updateUsers={updateUsers} t={t} />
 
       <TableContainer>
         <Table
@@ -245,6 +249,7 @@ export default function EnhancedTable({ data, roles, updateUsers }) {
           size={'medium'}
           aria-label="enhanced table">
           <EnhancedTableHead
+            t={t}
             classes={classes}
             order={order}
             orderBy={orderBy}
@@ -270,36 +275,47 @@ export default function EnhancedTable({ data, roles, updateUsers }) {
                           className="delete-icon"
                           aria-label="delete"
                           onClick={() => {
-                            setDeletableUser([item.id, item.firstName.concat(' ', item.lastName)]);
+                            setDeletableUser([
+                              item.id,
+                              item.firstName.concat(' ', item.lastName),
+                            ]);
                             setOpen(true);
                           }}>
                           <DeleteIcon />
                         </IconButton>
                       </Tooltip>
                     </TableCell>
-                    <TableCell component="th" id={labelId} scope="row" padding="none">
-                      {item.firstName ? item.firstName.concat(' ', item.lastName) : ''}
+                    <TableCell
+                      component="th"
+                      id={labelId}
+                      scope="row"
+                      padding="none">
+                      {item.firstName
+                        ? item.firstName.concat(' ', item.lastName)
+                        : ''}
                     </TableCell>
                     <TableCell align="center">{item.userName}</TableCell>
 
                     <TableCell align="center">
                       {isEditing === item.id ? (
                         <FormControl>
-                          <InputLabel>Role</InputLabel>
+                          <InputLabel>{t('Roles:Role')}</InputLabel>
                           <Select
                             value={role}
                             onChange={(event) => {
                               setRole(event.target.value);
                             }}>
                             {roles.map((obj, idx) => (
-                              <MenuItem key={`key-${idx}-name${obj}`} value={idx}>
-                                {obj}
+                              <MenuItem
+                                key={`key-${idx}-name${obj}`}
+                                value={idx}>
+                                {t('Roles:' + obj)}
                               </MenuItem>
                             ))}
                           </Select>
                         </FormControl>
                       ) : (
-                        item.role
+                        t('Roles:' + item.role)
                       )}
                     </TableCell>
 
@@ -313,7 +329,7 @@ export default function EnhancedTable({ data, roles, updateUsers }) {
                             onClick={() => {
                               handleChangeRole(item.id, item);
                             }}>
-                            Ok
+                            {t('Ok')}
                           </Button>
                           <Button
                             className="users-table__cancel-btn"
@@ -321,7 +337,7 @@ export default function EnhancedTable({ data, roles, updateUsers }) {
                             onClick={() => {
                               setEditing(null);
                             }}>
-                            Cancel
+                            {t('Cancel')}
                           </Button>
                         </div>
                       ) : (
@@ -331,7 +347,7 @@ export default function EnhancedTable({ data, roles, updateUsers }) {
                             setEditing(item.id);
                             setRole(item.role === 'Employee' ? 0 : 1);
                           }}>
-                          Edit
+                          {t('Edit')}
                         </Button>
                       )}
                     </TableCell>
@@ -351,6 +367,10 @@ export default function EnhancedTable({ data, roles, updateUsers }) {
           count={data.length}
           rowsPerPage={rowsPerPage}
           page={page}
+          labelRowsPerPage={t('Rows per page')}
+          labelDisplayedRows={({ from, to, count }) =>
+            t('labelDisplayedRows', { from: from, to: to })
+          }
           onChangePage={handleChangePage}
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />

@@ -1,11 +1,19 @@
 import React, { useState, useEffect, useContext } from 'react';
 import { useHistory } from 'react-router-dom';
-import { TextField, FormControl, InputLabel, Select, MenuItem, Button } from '@material-ui/core';
+import {
+  TextField,
+  FormControl,
+  InputLabel,
+  Select,
+  MenuItem,
+  Button,
+} from '@material-ui/core';
 import CircularProgress from '@material-ui/core/CircularProgress';
 
 import { getUsers } from '../components/Axios';
 import { Context } from '../Context';
 import UsersTable from '../components/Admin/UsersTable';
+import { useTranslation } from 'react-i18next';
 
 function Admin() {
   const [isLoading, setLoading] = useState(true);
@@ -14,6 +22,8 @@ function Admin() {
   const [role, setRole] = useState(-1);
   const [context, setContext] = useContext(Context);
   let history = useHistory();
+
+  const { t } = useTranslation(['Admin', 'Roles']);
 
   useEffect(() => {
     if (context.role !== 'Admin') {
@@ -30,7 +40,7 @@ function Admin() {
     await getUsers(filter, filterRole)
       .then(({ data }) => {
         const filteredData = data.filter(
-          (item) => item.role !== 'Admin' && item.role !== 'Accountant',
+          (item) => item.role !== 'Admin' && item.role !== 'Accountant'
         );
         setData(filteredData);
       })
@@ -62,23 +72,23 @@ function Admin() {
     <div>
       <div style={{ flexDirection: 'row', padding: '10px', marginTop: '10px' }}>
         <TextField
-          label="Filter by Name"
+          label={t('Filter by Name')}
           variant="standard"
           className="admin__form-input"
           onChange={(e) => setFilter(e.target.value)}
           style={{ marginBottom: 20, width: 300 }}
         />
         <FormControl className="admin__filter-role">
-          <InputLabel>Filter by Role</InputLabel>
+          <InputLabel>{t('Filter by Role')}</InputLabel>
           <Select
             value={role}
             onChange={(event) => {
               setRole(event.target.value);
             }}>
-            <MenuItem value={-1}>Any</MenuItem>
+            <MenuItem value={-1}>{t('Any')}</MenuItem>
             {roles.map((obj, idx) => (
               <MenuItem key={`key-${idx}-name${obj}`} value={idx}>
-                {obj}
+                {t('Roles:' + obj)}
               </MenuItem>
             ))}
           </Select>
@@ -94,7 +104,7 @@ function Admin() {
             marginLeft: '25px',
           }}
           onClick={() => handleGetUsers()}>
-          Filter
+          {t('Filter')}
         </Button>
       </div>
 

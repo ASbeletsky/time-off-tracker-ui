@@ -11,6 +11,7 @@ import NewRequest from './NewRequest';
 import ReviewsTable from '../components/OtherRequests/ReviewsTable';
 import RequestTable from '../components/RequestTable';
 import Calendar from '../components/Calendar';
+import { useTranslation } from 'react-i18next';
 
 function Home() {
   const [isLoading, setLoading] = useState(true);
@@ -19,6 +20,8 @@ function Home() {
   const [reviews, setReviews] = useState(null);
   const [calendar, setCalendar] = useState(null);
   const [events, setEvents] = useState(null);
+
+  const { t } = useTranslation(['Home']);
 
   let history = useHistory();
   const [context, setContext] = useContext(Context);
@@ -93,25 +96,32 @@ function Home() {
   return (
     <div>
       <div style={{ display: 'flex', flexDirection: 'row' }}>
-        <div style={{ flex: 0.8, margin: 5 }}>
+        <div style={{ flex: 0.8, margin: 5, minWidth: 550 }}>
           <div style={{ display: 'flex', flexDirection: 'row' }}>
-            <h2 style={{ marginBottom: 10, marginRight: 10 }}>My Recent Requests</h2>
+            <h2 style={{ marginBottom: 10, marginRight: 20 }}>
+              {t('My Recent Requests')}
+            </h2>
 
             <Button
               variant="contained"
               color="primary"
               onClick={() => history.push('/my_requests')}
-              style={{ marginRight: '150px', height: '30px', width: '100px', minWidth: '100px' }}>
-              View All
+              style={{ height: '30px', minWidth: '100px' }}>
+              {t('View All')}
             </Button>
             <Button
               className="home__new-request"
               variant="contained"
-              style={{ height: '30px', width: '140px', minWidth: '140px' }}
+              style={{
+                marginRight: '20px',
+                marginLeft: 'auto',
+                height: '30px',
+                minWidth: '140px',
+              }}
               onClick={() => {
                 setNewRequestState(true);
               }}>
-              New request
+              {t('New request')}
             </Button>
           </div>
 
@@ -120,21 +130,21 @@ function Home() {
           ) : users && requests && requests.length > 0 ? (
             <RequestTable data={requests.slice(0, 3)} users={users} short />
           ) : (
-            <h3>No requests</h3>
+            <h3>{t('No requests')}</h3>
           )}
         </div>
 
         {context.role !== 'Employee' ? (
-          <div style={{ flex: 1, margin: 5, marginRight: 15 }}>
+          <div style={{ flex: 1, margin: 5, marginRight: 15, minWidth: 650 }}>
             <h2 style={{ marginBottom: 20 }}>
-              New Requests For Approval ({reviews && reviews.length})
+              {t('New Requests For Approval')} ({reviews && reviews.length})
             </h2>
             {!users || !reviews ? (
               <CircularProgress />
             ) : users && reviews && reviews.length > 0 ? (
               <ReviewsTable data={reviews} users={users} short />
             ) : (
-              <h3>No reviews</h3>
+              <h3>{t('No reviews')}</h3>
             )}
           </div>
         ) : null}

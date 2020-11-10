@@ -1,0 +1,11 @@
+{
+    "Add new user": "Add new user",
+    "List of users": "List of users",
+    "Name": "Name",
+    "Username": "Username",
+    "Edit": "Edit",
+    "Ok": "Ok",
+    "Cancel": "Cancel",
+    "Rows per page": "Rows per page",
+    "labelDisplayedRows": "{{from}}-{{to}} of {{to}}"
+}
