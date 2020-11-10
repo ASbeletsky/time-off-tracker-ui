@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import 'react-dates/initialize';
 import 'react-dates/lib/css/_datepicker.css';
 import { SingleDatePicker } from 'react-dates';
+import { useTranslation } from 'react-i18next';
 
 function VacationPeriod({
   fromDate,
@@ -14,8 +15,10 @@ function VacationPeriod({
 }) {
   const [focusedFrom, setFocusFrom] = useState(false);
   const [focusedTo, setFocusTo] = useState(false);
+  const { t } = useTranslation(['Leaves']);
 
-  const getDateDifference = Math.round(toDate - fromDate) / (1000 * 60 * 60 * 24);
+  const getDateDifference =
+    Math.round(toDate - fromDate) / (1000 * 60 * 60 * 24);
 
   const showPastDays = () => false;
 
@@ -30,7 +33,7 @@ function VacationPeriod({
         id="dateFrom"
         disabled={isSendingRequest}
         showClearDate
-        placeholder="From"
+        placeholder={t('From')}
         isOutsideRange={showAllDays && showPastDays}
         isDayBlocked={(day) => (toDate ? day > toDate : null)}
         numberOfMonths={1}
@@ -44,7 +47,7 @@ function VacationPeriod({
         id="dateTo"
         disabled={isSendingRequest}
         showClearDate
-        placeholder="To"
+        placeholder={t('To')}
         isOutsideRange={showAllDays && showPastDays}
         isDayBlocked={(day) => (fromDate ? day < fromDate : null)}
         numberOfMonths={1}
@@ -56,7 +59,7 @@ function VacationPeriod({
 
       {!disablePeriod && fromDate && toDate && getDateDifference >= 0 ? (
         <h4 style={{ paddingTop: 3 }}>
-          {getDateDifference + 1} vacation {getDateDifference === 0 ? 'day' : 'days'}
+          {t('VacationDays', { days: getDateDifference + 1 })}
         </h4>
       ) : null}
     </div>

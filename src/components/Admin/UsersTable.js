@@ -184,7 +184,7 @@ export default function EnhancedTable({ data, roles, updateUsers }) {
   const [open, setOpen] = React.useState(false);
   const [deletableUser, setDeletableUser] = React.useState(null);
 
-  const { t } = useTranslation(['Admin\\UsersTable', 'Roles']);
+  const { t } = useTranslation(['Admin', 'Roles']);
 
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc';

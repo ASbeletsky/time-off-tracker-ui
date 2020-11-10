@@ -12,7 +12,7 @@ export default function ConfirmationDialog({
   onDelete,
   user,
 }) {
-  const { t } = useTranslation(['Admin\\ConfirmationDialog']);
+  const { t } = useTranslation(['Admin']);
 
   return (
     <div>
@@ -29,7 +29,7 @@ export default function ConfirmationDialog({
         </DialogContent>
         <DialogActions>
           <Button onClick={() => onDelete(user[0])} color="primary">
-            {t('OK')}
+            {t('Ok')}
           </Button>
           <Button onClick={onClose} color="primary" autoFocus>
             {t('Cancel')}

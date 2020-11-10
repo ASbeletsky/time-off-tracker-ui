@@ -14,7 +14,7 @@ import './scss/app.scss';
 ReactDOM.render(
   <Router>
     <Provider store={store}>
-      <Suspense fallback="loading">
+      <Suspense fallback="Loading I18n">
         <App />
       </Suspense>
     </Provider>

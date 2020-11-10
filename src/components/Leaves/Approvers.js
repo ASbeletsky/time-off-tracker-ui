@@ -1,9 +1,12 @@
 import React from 'react';
 import DoneIcon from '@material-ui/icons/Done';
+import { useTranslation } from 'react-i18next';
 
 import Signers from './Signers';
 
 function Approvers({ managers, isSendingRequest, prManagers, changeManagers }) {
+  const { t } = useTranslation(['Leaves', 'Roles']);
+
   const mapping = React.useCallback(
     (managers) => {
       return (
@@ -37,16 +40,16 @@ function Approvers({ managers, isSendingRequest, prManagers, changeManagers }) {
         </>
       );
     },
-    [isSendingRequest],
+    [isSendingRequest]
   );
 
   return (
     <div>
-      <h3>Approvers</h3>
+      <h3>{t('Approvers')}</h3>
       <ol className="approvers__list">
         <div style={{ display: 'flex', flexDirection: 'row' }}>
           <DoneIcon className="done-icon" />
-          <li>Accounting</li>
+          <li>{t('Roles:Accounting')}</li>
         </div>
         {managers && mapping(managers)}
       </ol>

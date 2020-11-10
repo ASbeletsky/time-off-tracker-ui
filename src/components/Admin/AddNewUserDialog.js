@@ -28,7 +28,7 @@ export default function AddNewUser({ isOpen, onClose, roles, updateUsers }) {
     password: '',
   });
 
-  const { t } = useTranslation(['Admin\\AddNewUserDialog', 'Roles']);
+  const { t } = useTranslation(['Admin', 'Roles']);
 
   const handleAddNewUser = async () => {
     let error = { ...errors };
